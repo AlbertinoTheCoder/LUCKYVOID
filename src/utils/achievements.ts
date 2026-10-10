@@ -207,9 +207,9 @@ export const ACHIEVEMENTS: Achievement[] = [
   {
     id: "all",
     name: "Into the Void",
-    description: "Try all 8 games",
+    description: "Try 8 different games",
     reward: 1000,
     icon: "🪐",
-    test: (p) => new Set(p.results.map((r) => r.game)).size === 8,
+    test: (p) => new Set(p.results.map((r) => r.game)).size >= 8,
   },
 ];

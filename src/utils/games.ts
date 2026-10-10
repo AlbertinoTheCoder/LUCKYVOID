@@ -1,5 +1,20 @@
 import type { GameInfo, GameId } from "../types";
 export const GAMES: GameInfo[] = [
+  { id: "baccarat", name: "BACCARAT", category: "Table games", tag: "CLOSEST TO NINE", color: "#58dfbc", description: "Two hands. A race to nine." },
+  { id: "wheel", name: "LUCKY WHEEL", category: "Arcade", tag: "SPIN YOUR FORTUNE", color: "#ffb45c", description: "Twelve pockets. A little golden luck." },
+  { id: "scratch", name: "SCRATCH CARDS", category: "Arcade", tag: "REVEAL THE MAGIC", color: "#f093cf", description: "Uncover three symbols. Find a match." },
+  {
+    id: "dice", name: "DICE", category: "Arcade", tag: "SET YOUR ODDS",
+    color: "#7be4d0", description: "Choose your target. Make your roll.",
+  },
+  {
+    id: "keno", name: "KENO", category: "Table games", tag: "PICK YOUR SIX",
+    color: "#f093cf", description: "Six picks. Ten numbers. Find your match.",
+  },
+  {
+    id: "coinflip", name: "COIN FLIP", category: "Arcade", tag: "A LITTLE LUCK",
+    color: "#ffce62", description: "Pick a side. Let fate flip.",
+  },
   {
     id: "neon",
     name: "NEON 777",

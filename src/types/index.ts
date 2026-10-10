@@ -6,7 +6,13 @@ export type GameId =
   | "roulette"
   | "crash"
   | "mines"
-  | "plinko";
+  | "plinko"
+  | "dice"
+  | "keno"
+  | "coinflip"
+  | "baccarat"
+  | "wheel"
+  | "scratch";
 export type Page =
   | "lobby"
   | "games"

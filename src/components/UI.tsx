@@ -1,4 +1,4 @@
-import {t} from "../utils/i18n";
+import { t } from "../utils/i18n";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { X, Coins, Minus, Plus, Info } from "lucide-react";
 import { coins } from "../utils/games";
@@ -6,16 +6,25 @@ import { usePlayer } from "../state/PlayerContext";
 export function Coin({
   value,
   className = "",
+  compact = false,
 }: {
   value: number;
   className?: string;
+  compact?: boolean;
 }) {
   return (
     <span className={`coin-value ${className}`}>
       <span className="coin-icon">
         <Coins size={13} />
       </span>
-      {t(coins(value))}
+      <span className="coin-digits">
+        {compact && value >= 100000
+          ? new Intl.NumberFormat("en-US", {
+              notation: "compact",
+              maximumFractionDigits: 1,
+            }).format(value)
+          : t(coins(value))}
+      </span>
     </span>
   );
 }
@@ -41,7 +50,7 @@ export function AnimatedBalance({ value }: { value: number }) {
     raf = requestAnimationFrame(step);
     return () => cancelAnimationFrame(raf);
   }, [value, player.settings.reducedMotion]);
-  return <Coin value={shown} />;
+  return <Coin value={shown} compact />;
 }
 export function BetControl({
   bet,
@@ -55,7 +64,8 @@ export function BetControl({
   return (
     <div className="bet-control">
       <label htmlFor="bet">
-        {t("BET AMOUNT")}<span>{t("VOID COINS")}</span>
+        {t("BET AMOUNT")}
+        <span>{t("VOID COINS")}</span>
       </label>
       <div className="bet-input">
         <button
@@ -116,7 +126,8 @@ export function Rules({ children }: { children: ReactNode }) {
   return (
     <details className="rules">
       <summary>
-        <Info size={16} /> {t("Rules, payouts & odds")}</summary>
+        <Info size={16} /> {t("Rules, payouts & odds")}
+      </summary>
       <div>{t(children)}</div>
     </details>
   );

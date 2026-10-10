@@ -32,8 +32,8 @@ export function initialPlayer(): Player {
     settings: {
       language: "en",
       // Default on as requested; the audio hook waits for a browser gesture.
-      sound: true,
-      music: true,
+      sound: false,
+      music: false,
       reducedMotion:
         typeof matchMedia !== "undefined" &&
         matchMedia("(prefers-reduced-motion: reduce)").matches,

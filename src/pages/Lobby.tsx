@@ -139,11 +139,11 @@ export function Lobby({
           <div>
             <h2>
               {t(all ? "Find your next favorite" : "The floor is yours")}{t(" ")}
-              <span className="tiny-badge">{t("8 GAMES")}</span>
+              <span className="tiny-badge">{t(`${GAMES.length} GAMES`)}</span>
             </h2>
             <p>
               {t(all
-                ? "Eight ways to play. One extraordinary arcade."
+                ? "Fourteen ways to play. One extraordinary arcade."
                 : "Old favorites. New discoveries. All yours to explore.")}
             </p>
           </div>

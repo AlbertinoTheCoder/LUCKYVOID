@@ -9,10 +9,16 @@ export function translate(text: string, selected: Language): string {
   const dictionary: Record<string, string> = italian;
   if (dictionary[text]) return dictionary[text];
   const patterns: [RegExp, (m: RegExpMatchArray) => string][] = [
+    [/^Baccarat · (\d+):(\d+) · (player|banker|tie)$/, m => `Baccarat · ${m[1]}:${m[2]} · ${m[3] === "player" ? "giocatore" : m[3] === "banker" ? "banco" : "pareggio"}`],
+    [/^Lucky Wheel · (.+)×$/, m => `Ruota della fortuna · ${m[1]}×`],
+    [/^Scratch Cards · (.+)×$/, m => `Gratta e vinci · ${m[1]}×`],
+    [/^Dice · (\d+) · (under|over) (\d+)$/, m => `Dadi · ${m[1]} · ${m[2] === "under" ? "inferiore a" : "maggiore o uguale a"} ${m[3]}`],
+    [/^Coin Flip · (Heads|Tails)$/, m => `Testa o croce · ${translate(m[1], selected)}`],
     [
       /^(\d+) balls? in flight · drop another anytime$/,
       (m) => `${m[1]} palline in volo · lanciane un’altra quando vuoi`,
     ],
+    [/^(\d+) GAMES$/, m => `${m[1]} GIOCHI`],
     [/^Level (\d+)$/, (m) => `Livello ${m[1]}`],
     [/^HAND (\d+)$/, (m) => `MANO ${m[1]}`],
     [/^Play (.+)$/, (m) => `Gioca a ${m[1]}`],

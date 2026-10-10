@@ -9,11 +9,13 @@ import { Roulette } from "../games/Roulette";
 import { Crash } from "../games/Crash";
 import { Mines } from "../games/Mines";
 import { Plinko } from "../games/Plinko";
+import { Dice, Keno, CoinFlip } from "../games/QuickGames";
+import { Baccarat, LuckyWheel, ScratchCards } from "../games/MoreGames";
 export function GamePage({ id, onBack }: { id: GameId; onBack: () => void }) {
   const { player, favorite } = usePlayer();
   const game = gameById(id);
   const Component =
-    id === "blackjack"
+    id === "baccarat" ? Baccarat : id === "wheel" ? LuckyWheel : id === "scratch" ? ScratchCards : id === "dice" ? Dice : id === "keno" ? Keno : id === "coinflip" ? CoinFlip : id === "blackjack"
       ? Blackjack
       : id === "roulette"
         ? Roulette

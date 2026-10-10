@@ -17,9 +17,9 @@ const result: Result = {
   time: 1,
 };
 describe("progress backups", () => {
-  it("starts music and sound effects enabled", () => {
-    expect(initialPlayer().settings.sound).toBe(true);
-    expect(initialPlayer().settings.music).toBe(true);
+  it("starts music and sound effects muted", () => {
+    expect(initialPlayer().settings.sound).toBe(false);
+    expect(initialPlayer().settings.music).toBe(false);
   });
   it("rejects damaged nested data before restoring", () => {
     for (const change of [

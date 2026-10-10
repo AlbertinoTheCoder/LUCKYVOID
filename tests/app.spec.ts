@@ -38,7 +38,7 @@ async function floor(page: Page) {
   await page.getByRole("button", { name: "Back to the floor" }).click();
   await expect(page.locator(".games-grid")).toBeVisible();
 }
-test("all eight games settle through the shared wallet without browser errors", async ({
+test("all fourteen games settle through the shared wallet without browser errors", async ({
   page,
 }) => {
   const errors: string[] = [];
@@ -99,6 +99,33 @@ test("all eight games settle through the shared wallet without browser errors", 
   if (await collect.count()) await collect.click();
   await complete(page, 8);
   expect((await stored(page)).achievements).toContain("all");
+  await floor(page);
+  await play(page, "DICE");
+  await page.getByRole("button", { name: "Roll dice", exact: true }).click();
+  await complete(page, 9);
+  await floor(page);
+  await play(page, "COIN FLIP");
+  await page.getByRole("button", { name: "Flip coin", exact: true }).click();
+  await complete(page, 10);
+  await floor(page);
+  await play(page, "KENO");
+  await expect(page.getByRole("button", { name: "Draw numbers", exact: true })).toBeDisabled();
+  await page.getByRole("button", { name: "Quick pick", exact: true }).click();
+  await page.getByRole("button", { name: "Draw numbers", exact: true }).click();
+  await complete(page, 11);
+  await floor(page);
+  await play(page, "BACCARAT");
+  await page.getByRole("button", { name: "Deal baccarat", exact: true }).click();
+  await complete(page, 12);
+  await floor(page);
+  await play(page, "LUCKY WHEEL");
+  await page.getByRole("button", { name: "Spin lucky wheel", exact: true }).click();
+  await complete(page, 13);
+  await floor(page);
+  await play(page, "SCRATCH CARDS");
+  await page.getByRole("button", { name: "Get scratch card", exact: true }).click();
+  await complete(page, 14);
+  await page.getByRole("button", { name: "Reveal all", exact: true }).click();
   expect(errors).toEqual([]);
 });
 test("daily rewards, favorites, profile and settings persist; reset requires confirmation", async ({
@@ -133,8 +160,8 @@ test("daily rewards, favorites, profile and settings persist; reset requires con
     .selectOption("low");
   await page.reload();
   p = await stored(page);
-  expect(p.settings.sound).toBe(false);
-  expect(p.settings.music).toBe(false);
+  expect(p.settings.sound).toBe(true);
+  expect(p.settings.music).toBe(true);
   expect(p.settings.quality).toBe("low");
   await page
     .locator(".sidebar")
@@ -228,6 +255,12 @@ for (const viewport of [
       "PLINKO",
       "VOID SPINS",
       "GOLD RUSH",
+      "DICE",
+      "COIN FLIP",
+      "KENO",
+      "BACCARAT",
+      "LUCKY WHEEL",
+      "SCRATCH CARDS",
     ]) {
       await page
         .getByRole("button", { name: `Play ${name}`, exact: true })
@@ -251,7 +284,14 @@ for (const viewport of [
         .locator(".sidebar")
         .getByRole("button", { name, exact: true })
         .tap();
-      await expect(page.locator(".page-heading")).toBeVisible();
+      const titles: Record<string, string> = {
+        Rewards: "Good things come to play.",
+        "My profile": "Player profile",
+        Activity: "Your activity",
+        Leaderboard: "The stars of the void",
+        Settings: "Make yourself at home.",
+      };
+      await expect(page.locator(".page-heading h1")).toHaveText(titles[name]);
       await overflow();
     }
     if (viewport.width <= 700) {
@@ -321,16 +361,41 @@ test("progress backups require review and leave progress intact on invalid input
     /^luckyvoid-progress-.*\.json$/,
   );
 });
-test("audio starts enabled and unlocks on the first interaction", async ({page}) => {
- await page.addInitScript(() => {const Native=window.AudioContext;const created:AudioContext[]=[];(window as any).__audio=created;window.AudioContext=class extends Native{constructor(...args:ConstructorParameters<typeof AudioContext>){super(...args);created.push(this);}};});
- await page.goto('/#/settings');
- await expect(page.getByRole('switch',{name:'Sound effects'})).toHaveAttribute('aria-checked','true');
- await expect(page.getByRole('switch',{name:'Arcade music'})).toHaveAttribute('aria-checked','true');
- await page.getByRole('heading',{name:'Make yourself at home.'}).click();
- await expect.poll(()=>page.evaluate(()=>(window as any).__audio[0]?.state)).toBe('running');
- await page.getByRole('switch',{name:'Arcade music'}).click();
- await expect(page.getByRole('switch',{name:'Arcade music'})).toHaveAttribute('aria-checked','false');
- await page.reload();await expect(page.getByRole('switch',{name:'Arcade music'})).toHaveAttribute('aria-checked','false');
+test("audio is muted by default and starts only when explicitly enabled", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    const Native = window.AudioContext;
+    const created: AudioContext[] = [];
+    (window as any).__audio = created;
+    window.AudioContext = class extends Native {
+      constructor(...args: ConstructorParameters<typeof AudioContext>) {
+        super(...args);
+        created.push(this);
+      }
+    };
+  });
+  await page.goto("/#/settings");
+  await expect(
+    page.getByRole("switch", { name: "Sound effects" }),
+  ).toHaveAttribute("aria-checked", "false");
+  await expect(
+    page.getByRole("switch", { name: "Arcade music" }),
+  ).toHaveAttribute("aria-checked", "false");
+  await page.getByRole("heading", { name: "Make yourself at home." }).click();
+  expect(await page.evaluate(() => (window as any).__audio.length)).toBe(0);
+  await page.getByRole("switch", { name: "Arcade music" }).click();
+  await expect
+    .poll(() => page.evaluate(() => (window as any).__audio[0]?.state))
+    .toBe("running");
+  await page.getByRole("switch", { name: "Arcade music" }).click();
+  await expect(
+    page.getByRole("switch", { name: "Arcade music" }),
+  ).toHaveAttribute("aria-checked", "false");
+  await page.reload();
+  await expect(
+    page.getByRole("switch", { name: "Arcade music" }),
+  ).toHaveAttribute("aria-checked", "false");
 });
 test("Plinko accepts overlapping balls with independent bets and settles each once", async ({
   page,
@@ -495,4 +560,128 @@ test("language selection persists and the Italian profile fits a phone screen", 
       () => document.documentElement.scrollWidth <= innerWidth,
     ),
   ).toBe(true);
+});
+
+test("long player names and large balances fit the mobile lobby, profile and leaderboard", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 320, height: 640 });
+  await fast(page);
+  await page.evaluate(() => {
+    const key = "luckyvoid.player.v1";
+    const p = JSON.parse(localStorage.getItem(key)!);
+    p.balance += 100000000000;
+    p.biggestWin = 100000000000;
+    p.totalWon = 100000000000;
+    p.transactions.unshift({
+      id: "layout",
+      time: Date.now(),
+      label: "Layout fixture",
+      amount: 100000000000,
+    });
+    localStorage.setItem(key, JSON.stringify(p));
+  });
+  await page.goto("/#/profile");
+  await page.locator(".profile-card input").fill("W".repeat(24));
+  await page.getByRole("button", { name: "Save profile", exact: true }).click();
+  const check = async () =>
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    ).toBe(true);
+  await check();
+  await page
+    .locator(".bottom-nav")
+    .getByRole("button", { name: "Lobby", exact: true })
+    .click();
+  await expect(page.locator(".hero")).toBeVisible();
+  await check();
+  await page.getByRole("button", { name: "Open navigation" }).click();
+  await page
+    .locator(".sidebar")
+    .getByRole("button", { name: "Leaderboard", exact: true })
+    .click();
+  await expect(page.locator(".podium")).toBeVisible();
+  await check();
+});
+
+test("new games respect choices, settle exact payouts and preserve progress", async ({ page }) => {
+  await fast(page);
+  await page.evaluate(() => {
+    crypto.getRandomValues = <T extends ArrayBufferView | null>(a: T): T => {
+      if (a instanceof Uint32Array) a.fill(0);
+      return a;
+    };
+  });
+  await play(page, "DICE");
+  await page.getByRole("button", { name: "Roll dice", exact: true }).click();
+  await complete(page, 1);
+  expect((await stored(page)).results[0].payout).toBe(194);
+  await page.getByRole("button", { name: "Roll over or equal", exact: true }).click();
+  await page.getByRole("button", { name: "Roll dice", exact: true }).click();
+  await complete(page, 2);
+  expect((await stored(page)).results[0].payout).toBe(0);
+  await floor(page);
+  await play(page, "COIN FLIP");
+  await page.getByRole("button", { name: "Flip coin", exact: true }).click();
+  await complete(page, 3);
+  expect((await stored(page)).results[0].payout).toBe(194);
+  await page.getByRole("button", { name: "Tails", exact: true }).click();
+  await page.getByRole("button", { name: "Flip coin", exact: true }).click();
+  await complete(page, 4);
+  expect((await stored(page)).results[0].payout).toBe(0);
+  await floor(page);
+  await play(page, "KENO");
+  await page.getByRole("button", { name: "Quick pick", exact: true }).click();
+  await expect(page.locator(".keno-grid .chosen")).toHaveCount(6);
+  await page.getByRole("button", { name: "Draw numbers", exact: true }).click();
+  await complete(page, 5);
+  expect((await stored(page)).results[0].payout).toBe(50000);
+  await expect(page.locator(".keno-grid .matched")).toHaveCount(6);
+  await expect(page.locator(".keno-grid .drawn")).toHaveCount(10);
+  await page.getByRole("button", { name: "Favorite", exact: true }).click();
+  await page.reload();
+  expect((await stored(page)).favorites).toContain("keno");
+  expect((await stored(page)).results.slice(0, 5).map((r: { game: string }) => r.game)).toEqual(["keno", "coinflip", "coinflip", "dice", "dice"]);
+});
+
+test("baccarat ties refund, wheel settles, and scratch cards survive leaving unrevealed", async ({ page }) => {
+  await fast(page);
+  await page.evaluate(() => {
+    crypto.getRandomValues = <T extends ArrayBufferView | null>(a: T): T => {
+      if (a instanceof Uint32Array) a.fill(0);
+      return a;
+    };
+  });
+  await play(page, "BACCARAT");
+  await page.getByRole("button", { name: "Deal baccarat", exact: true }).click();
+  await complete(page, 1);
+  expect((await stored(page)).results[0].payout).toBe(100);
+  await page.getByRole("button", { name: "Tie · 9×", exact: true }).click();
+  await page.getByRole("button", { name: "Deal baccarat", exact: true }).click();
+  await complete(page, 2);
+  expect((await stored(page)).results[0].payout).toBe(900);
+  await floor(page);
+  await play(page, "LUCKY WHEEL");
+  await page.getByRole("button", { name: "Spin lucky wheel", exact: true }).click();
+  await complete(page, 3);
+  expect((await stored(page)).results[0].payout).toBe(0);
+  await floor(page);
+  await play(page, "SCRATCH CARDS");
+  await page.getByRole("button", { name: "Get scratch card", exact: true }).click();
+  await complete(page, 4);
+  expect((await stored(page)).results[0].payout).toBe(400);
+  await expect(page.getByRole("button", { name: "Get scratch card", exact: true })).toHaveCount(0);
+  await page.getByRole("button", { name: "Reveal panel 1", exact: true }).click();
+  await expect(page.locator(".scratch-tiles .revealed")).toHaveCount(1);
+  await page.getByRole("button", { name: "Reveal all", exact: true }).click();
+  await expect(page.locator(".scratch-tiles .revealed")).toHaveCount(3);
+  await page.getByRole("button", { name: "Get scratch card", exact: true }).click();
+  await complete(page, 5);
+  const balance = (await stored(page)).balance;
+  await page.reload();
+  expect((await stored(page)).balance).toBe(balance);
+  expect((await stored(page)).results[0].payout).toBe(400);
+  expect((await stored(page)).transactions[0].label).not.toBe("Interrupted round refunded");
 });

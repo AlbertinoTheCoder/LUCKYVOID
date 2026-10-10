@@ -43,6 +43,18 @@ export function GameArt({ id, hero = false }: { id: GameId; hero?: boolean }) {
             <i />
           </div>
         </div>
+      ) : id === "baccarat" ? (
+        <div className="baccarat-illustration"><span>8<small>♠</small></span><span>9<small>♥</small></span></div>
+      ) : id === "wheel" ? (
+        <div className="lucky-wheel art-lucky-wheel"><span>✦</span></div>
+      ) : id === "scratch" ? (
+        <div className="scratch-illustration"><span>◆</span><span>◆</span><span>◆</span></div>
+      ) : id === "dice" ? (
+        <div className="dice-illustration"><span>⚄</span><span>⚂</span></div>
+      ) : id === "coinflip" ? (
+        <div className="coin-illustration"><span>☀</span><i>✦</i></div>
+      ) : id === "keno" ? (
+        <div className="keno-illustration">{[7, 12, 21, 28, 33, 40].map((n, i) => <span key={n} className={i % 2 ? "lit" : ""}>{n}</span>)}</div>
       ) : id === "blackjack" ? (
         <div className="card-illustration">
           <div className="art-card card-one">
