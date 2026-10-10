@@ -2,6 +2,11 @@
 
 A free virtual arcade built with React, TypeScript, and Vite. Twenty-one games use fictional VOID coins, with browser-saved profiles, achievements, rewards, and activity history.
 
+# Play Online
+
+
+Play it here! https://albertinothecoder.github.io/LUCKYVOID/
+
 ## Development
 
 ```sh
