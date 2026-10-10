@@ -9,6 +9,7 @@ export function translate(text: string, selected: Language): string {
   const dictionary: Record<string, string> = italian;
   if (dictionary[text]) return dictionary[text];
   const patterns: [RegExp, (m: RegExpMatchArray) => string][] = [
+    [/^Secret number: (\d+)$/, m => `Numero segreto: ${m[1]}`],
     [/^Baccarat · (\d+):(\d+) · (player|banker|tie)$/, m => `Baccarat · ${m[1]}:${m[2]} · ${m[3] === "player" ? "giocatore" : m[3] === "banker" ? "banco" : "pareggio"}`],
     [/^Lucky Wheel · (.+)×$/, m => `Ruota della fortuna · ${m[1]}×`],
     [/^Scratch Cards · (.+)×$/, m => `Gratta e vinci · ${m[1]}×`],

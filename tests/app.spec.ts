@@ -38,7 +38,7 @@ async function floor(page: Page) {
   await page.getByRole("button", { name: "Back to the floor" }).click();
   await expect(page.locator(".games-grid")).toBeVisible();
 }
-test("all fourteen games settle through the shared wallet without browser errors", async ({
+test("all twenty-one games settle through the shared wallet without browser errors", async ({
   page,
 }) => {
   const errors: string[] = [];
@@ -126,6 +126,41 @@ test("all fourteen games settle through the shared wallet without browser errors
   await page.getByRole("button", { name: "Get scratch card", exact: true }).click();
   await complete(page, 14);
   await page.getByRole("button", { name: "Reveal all", exact: true }).click();
+  await floor(page);
+  await play(page, "VIDEO POKER");
+  await page.getByRole("button", { name: "Deal poker hand", exact: true }).click();
+  await page.getByRole("button", { name: "Draw replacement cards", exact: true }).click();
+  await complete(page, 15);
+  await floor(page);
+  await play(page, "HIGHER / LOWER");
+  await page.getByRole("button", { name: "Start higher / lower", exact: true }).click();
+  const higher = page.getByRole("button", { name: /^Higher/ });
+  if (await higher.isEnabled()) await higher.click();
+  else await page.getByRole("button", { name: /^Lower/ }).click();
+  await complete(page, 16);
+  await floor(page);
+  await play(page, "CARD WAR");
+  await page.getByRole("button", { name: "Deal battle cards", exact: true }).click();
+  await complete(page, 17);
+  await floor(page);
+  await play(page, "ROCK PAPER SCISSORS");
+  await page.getByRole("button", { name: "Play your move", exact: true }).click();
+  await complete(page, 18);
+  await floor(page);
+  await play(page, "MEMORY MATCH");
+  await page.getByRole("button", { name: "Start memory challenge", exact: true }).click();
+  await page.getByRole("button", { name: "Give up round", exact: true }).click();
+  await complete(page, 19);
+  await floor(page);
+  await play(page, "TIC-TAC-TOE");
+  await page.getByRole("button", { name: "Start tic-tac-toe", exact: true }).click();
+  await page.getByRole("button", { name: "Give up round", exact: true }).click();
+  await complete(page, 20);
+  await floor(page);
+  await play(page, "CODEBREAKER");
+  await page.getByRole("button", { name: "Start codebreaker", exact: true }).click();
+  await page.getByRole("button", { name: "Give up round", exact: true }).click();
+  await complete(page, 21);
   expect(errors).toEqual([]);
 });
 test("daily rewards, favorites, profile and settings persist; reset requires confirmation", async ({
@@ -261,6 +296,13 @@ for (const viewport of [
       "BACCARAT",
       "LUCKY WHEEL",
       "SCRATCH CARDS",
+      "VIDEO POKER",
+      "HIGHER / LOWER",
+      "CARD WAR",
+      "MEMORY MATCH",
+      "TIC-TAC-TOE",
+      "ROCK PAPER SCISSORS",
+      "CODEBREAKER",
     ]) {
       await page
         .getByRole("button", { name: `Play ${name}`, exact: true })
@@ -684,4 +726,76 @@ test("baccarat ties refund, wheel settles, and scratch cards survive leaving unr
   expect((await stored(page)).balance).toBe(balance);
   expect((await stored(page)).results[0].payout).toBe(400);
   expect((await stored(page)).transactions[0].label).not.toBe("Interrupted round refunded");
+});
+
+test("seven card and skill games honor player choices and exact winning payouts", async ({ page }) => {
+  await fast(page);
+  const entropy = async (values: number[]) => page.evaluate(values => {
+    let index = 0;
+    crypto.getRandomValues = <T extends ArrayBufferView | null>(a: T): T => {
+      if (a instanceof Uint32Array) a.fill(values[index++] ?? 0);
+      return a;
+    };
+  }, values);
+  await entropy([]);
+  await play(page, "VIDEO POKER");
+  await page.getByRole("button", { name: "Deal poker hand", exact: true }).click();
+  await expect(page.locator(".poker-hand")).toBeVisible();
+  for (let n=1;n<=5;n++) await page.getByRole("button", { name: `Hold card ${n}`, exact: true }).click();
+  await expect(page.locator(".poker-hand .held")).toHaveCount(5);
+  await page.getByRole("button", { name: "Draw replacement cards", exact: true }).click();
+  await complete(page, 1);
+  expect((await stored(page)).results[0].payout).toBe(5000);
+  await floor(page);
+  await play(page, "HIGHER / LOWER");
+  await entropy([6,7]);
+  await page.getByRole("button", { name: "Start higher / lower", exact: true }).click();
+  await page.getByRole("button", { name: /^Higher/ }).click();
+  await complete(page, 2);
+  expect((await stored(page)).results[0].payout).toBe(210);
+  await floor(page);
+  await entropy([]);
+  await play(page, "CARD WAR");
+  await page.getByRole("button", { name: "Deal battle cards", exact: true }).click();
+  await complete(page, 3);
+  expect((await stored(page)).results[0].payout).toBe(100);
+  await floor(page);
+  await play(page, "ROCK PAPER SCISSORS");
+  await page.getByRole("button", { name: "Paper", exact: false }).click();
+  await page.getByRole("button", { name: "Play your move", exact: true }).click();
+  await complete(page, 4);
+  expect((await stored(page)).results[0].payout).toBe(190);
+  await floor(page);
+  await play(page, "MEMORY MATCH");
+  await page.getByRole("button", { name: "Start memory challenge", exact: true }).click();
+  await page.getByRole("button", { name: "Memory tile 1", exact: true }).click();
+  await page.getByRole("button", { name: "Memory tile 2", exact: true }).click();
+  await page.getByRole("button", { name: "Continue matching", exact: true }).click();
+  for (let n=1;n<=8;n++) {
+    await page.getByRole("button", { name: `Memory tile ${n}`, exact: true }).click();
+    await page.getByRole("button", { name: `Memory tile ${n+8}`, exact: true }).click();
+  }
+  await complete(page, 5);
+  expect((await stored(page)).results[0].payout).toBe(200);
+  await expect(page.locator(".memory-board .matched")).toHaveCount(16);
+  await floor(page);
+  await play(page, "TIC-TAC-TOE");
+  await page.getByRole("button", { name: "Start tic-tac-toe", exact: true }).click();
+  for (const n of [1,5,9]) await page.getByRole("button", { name: `Square ${n}`, exact: true }).click();
+  await complete(page, 6);
+  expect((await stored(page)).results[0].payout).toBe(200);
+  await floor(page);
+  await play(page, "CODEBREAKER");
+  await page.getByRole("button", { name: "Start codebreaker", exact: true }).click();
+  await page.getByRole("spinbutton", { name: "Your guess", exact: true }).fill("50");
+  await page.getByRole("button", { name: "Check code", exact: true }).click();
+  await expect(page.locator(".code-history")).toContainText("Go lower");
+  await expect(page.getByRole("button", { name: "Check code", exact: true })).toBeDisabled();
+  await page.getByRole("spinbutton", { name: "Your guess", exact: true }).fill("1");
+  await page.getByRole("button", { name: "Check code", exact: true }).click();
+  await complete(page, 7);
+  expect((await stored(page)).results[0].payout).toBe(150);
+  await page.reload();
+  expect((await stored(page)).gamesPlayed).toBe(7);
+  expect((await stored(page)).pending).toHaveLength(0);
 });

@@ -1,5 +1,12 @@
 import type { GameInfo, GameId } from "../types";
 export const GAMES: GameInfo[] = [
+  { id: "poker", name: "VIDEO POKER", category: "Table games", tag: "HOLD YOUR HAND", color: "#aa93ff", description: "Five cards. One draw. Your call." },
+  { id: "hilo", name: "HIGHER / LOWER", category: "Table games", tag: "READ THE NEXT CARD", color: "#58dfbc", description: "A high card? A low card? Make the call." },
+  { id: "war", name: "CARD WAR", category: "Table games", tag: "WIN THE BATTLE", color: "#ff759b", description: "Your card against the void. Highest wins." },
+  { id: "memory", name: "MEMORY MATCH", category: "Arcade", tag: "TRUST YOUR MEMORY", color: "#5cd5f5", description: "Sixteen tiles. Eight pairs. Stay sharp." },
+  { id: "tictactoe", name: "TIC-TAC-TOE", category: "Arcade", tag: "THREE MAKES MAGIC", color: "#b66aff", description: "Take your square. Find your line." },
+  { id: "rps", name: "ROCK PAPER SCISSORS", category: "Arcade", tag: "MAKE YOUR MOVE", color: "#ffb45c", description: "Three moves. One quick showdown." },
+  { id: "codebreaker", name: "CODEBREAKER", category: "Arcade", tag: "CRACK THE CODE", color: "#7be4d0", description: "Follow the clues. Unlock the secret." },
   { id: "baccarat", name: "BACCARAT", category: "Table games", tag: "CLOSEST TO NINE", color: "#58dfbc", description: "Two hands. A race to nine." },
   { id: "wheel", name: "LUCKY WHEEL", category: "Arcade", tag: "SPIN YOUR FORTUNE", color: "#ffb45c", description: "Twelve pockets. A little golden luck." },
   { id: "scratch", name: "SCRATCH CARDS", category: "Arcade", tag: "REVEAL THE MAGIC", color: "#f093cf", description: "Uncover three symbols. Find a match." },

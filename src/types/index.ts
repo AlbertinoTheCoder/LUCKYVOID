@@ -12,7 +12,14 @@ export type GameId =
   | "coinflip"
   | "baccarat"
   | "wheel"
-  | "scratch";
+  | "scratch"
+  | "poker"
+  | "hilo"
+  | "war"
+  | "rps"
+  | "memory"
+  | "tictactoe"
+  | "codebreaker";
 export type Page =
   | "lobby"
   | "games"

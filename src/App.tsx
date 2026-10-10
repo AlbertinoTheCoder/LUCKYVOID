@@ -30,7 +30,7 @@ import {
   History,
 } from "./pages/PlayerPages";
 import { GamePage } from "./pages/GamePage";
-import { level } from "./utils/games";
+import { level, GAMES } from "./utils/games";
 import { parseRoute, routeHash } from "./utils/navigation";
 import type { Page, GameId } from "./types";
 const nav = [
@@ -133,7 +133,7 @@ export default function App() {
         <Icon size={19} />
         {t(label)}
         {t(id === "rewards" && <span className="nav-dot" />)}
-        {t(id === "games" && <small>8</small>)}
+        {t(id === "games" && <small>{GAMES.length}</small>)}
       </button>
     ));
   return (

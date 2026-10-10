@@ -143,7 +143,7 @@ export function Lobby({
             </h2>
             <p>
               {t(all
-                ? "Fourteen ways to play. One extraordinary arcade."
+                ? "Twenty-one ways to play. One extraordinary arcade."
                 : "Old favorites. New discoveries. All yours to explore.")}
             </p>
           </div>

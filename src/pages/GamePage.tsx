@@ -1,3 +1,4 @@
+import type { ComponentType } from "react";
 import {t} from "../utils/i18n";
 import { ArrowLeft, Heart, ShieldCheck, Clock3 } from "lucide-react";
 import { usePlayer } from "../state/PlayerContext";
@@ -11,21 +12,17 @@ import { Mines } from "../games/Mines";
 import { Plinko } from "../games/Plinko";
 import { Dice, Keno, CoinFlip } from "../games/QuickGames";
 import { Baccarat, LuckyWheel, ScratchCards } from "../games/MoreGames";
+import { VideoPoker, HigherLower, War, RockPaperScissors, MemoryMatch, TicTacToe, Codebreaker } from "../games/ChallengeGames";
+const gameComponents: Partial<Record<GameId, ComponentType>> = {
+  blackjack: Blackjack, roulette: Roulette, crash: Crash, mines: Mines, plinko: Plinko,
+  dice: Dice, keno: Keno, coinflip: CoinFlip, baccarat: Baccarat, wheel: LuckyWheel, scratch: ScratchCards,
+  poker: VideoPoker, hilo: HigherLower, war: War, rps: RockPaperScissors, memory: MemoryMatch,
+  tictactoe: TicTacToe, codebreaker: Codebreaker,
+};
 export function GamePage({ id, onBack }: { id: GameId; onBack: () => void }) {
   const { player, favorite } = usePlayer();
   const game = gameById(id);
-  const Component =
-    id === "baccarat" ? Baccarat : id === "wheel" ? LuckyWheel : id === "scratch" ? ScratchCards : id === "dice" ? Dice : id === "keno" ? Keno : id === "coinflip" ? CoinFlip : id === "blackjack"
-      ? Blackjack
-      : id === "roulette"
-        ? Roulette
-        : id === "crash"
-          ? Crash
-          : id === "mines"
-            ? Mines
-            : id === "plinko"
-              ? Plinko
-              : null;
+  const Component = gameComponents[id];
   return (
     <>
       <div className="game-page-heading">

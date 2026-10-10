@@ -1,13 +1,17 @@
+import { Brain, Hash, Binary, Swords, Hand, Layers, ArrowUpDown } from "lucide-react";
 import {t} from "../utils/i18n";
 import type { GameId } from "../types";
 export function GameArt({ id, hero = false }: { id: GameId; hero?: boolean }) {
+  const ChallengeIcon = { poker: Layers, hilo: ArrowUpDown, war: Swords, memory: Brain, tictactoe: Hash, rps: Hand, codebreaker: Binary }[id as "poker" | "hilo" | "war" | "memory" | "tictactoe" | "rps" | "codebreaker"];
   return (
     <div
       aria-hidden="true"
       className={`game-art art-${id} ${hero ? "hero-art" : ""}`}
     >
       <div className="art-orbit" />
-      {t(["neon", "gold", "void"].includes(id) ? (
+      {t(ChallengeIcon ? (
+        <div className="challenge-illustration"><ChallengeIcon size={68} strokeWidth={1.5}/><span>✦</span></div>
+      ) : ["neon", "gold", "void"].includes(id) ? (
         <div className="slot-illustration">
           <div className="slot-top">
             {t(id === "gold"

@@ -1,6 +1,6 @@
 # LUCKYVOID
 
-A free virtual arcade built with React, TypeScript, and Vite. Fourteen games use fictional VOID coins, with browser-saved profiles, achievements, rewards, and activity history.
+A free virtual arcade built with React, TypeScript, and Vite. Twenty-one games use fictional VOID coins, with browser-saved profiles, achievements, rewards, and activity history.
 
 ## Development
 
@@ -34,7 +34,7 @@ Vite listens on **0.0.0.0:5173**. In Codespaces, open the **Ports** panel, forwa
 ## Features
 
 - Original dark casino artwork, purple/gold accents, animated lobby, responsive game cards, search, categories, recent games, and favorites.
-- Fourteen playable games: Baccarat, Lucky Wheel, Scratch Cards, Dice, Keno, Coin Flip, NEON 777, VOID SPINS, GOLD RUSH, Blackjack, European Roulette, Crash, Mines, and canvas Plinko.
+- Twenty-one playable games: Video Poker, Higher / Lower, Card War, Memory Match, Tic-Tac-Toe, Rock Paper Scissors, Codebreaker, Baccarat, Lucky Wheel, Scratch Cards, Dice, Keno, Coin Flip, NEON 777, VOID SPINS, GOLD RUSH, Blackjack, European Roulette, Crash, Mines, and canvas Plinko.
 - 10,000 starting coins; free daily 1,000-coin rewards; 24 automatic achievements with one-time rewards; animated balance and transaction history.
 - Editable player name, eight avatars, XP/levels, lifetime statistics, and local leaderboards with explicitly simulated demo players.
 - Mobile bottom navigation, scrolling landscape sidebar, touch controls, safe-area padding, keyboard access, and reset/import confirmation dialogs.
@@ -45,7 +45,7 @@ Vite listens on **0.0.0.0:5173**. In Codespaces, open the **Ports** panel, forwa
 
 ## Rules and probabilities
 
-Rules and payout tables are visible within every game. Baccarat uses independent rank draws and standard third-card rules, with Player/Banker/Tie bets. Lucky Wheel has twelve equal-probability pockets with 95.83% return. Scratch Cards have three independent symbols, pay matching triples, and have 93.75% return; their results settle at purchase. Dice supports roll-under and roll-over-or-equal targets with a return of at most 97%. Coin Flip pays 1.94× on a 50/50 match. Keno draws 10 unique numbers from 40 against 6 picks, paying 4×/12×/70×/500× for 3/4/5/6 matches. Payouts include the original bet and round down to whole coins. The three-reel slot games have 85.65% theoretical return; five-reel VOID SPINS has 88.73%. European roulette uses 37 equally likely pockets and 97.30% return. Mines uses exact survival probabilities with a 3% margin; Crash uses an independent multiplier survival model with a 3% instant-stop chance. Plinko samples eight independent 50/50 bounces and normalizes risk tables to at most 96% return. Blackjack uses a fresh six-deck shoe, stands on all 17, pays natural blackjack 3:2, and supports double down and up to four split hands. Split aces receive one card each. Return depends on strategy.
+Rules and payout tables are visible within every game. Video Poker uses a shuffled 52-card deck with one replacement draw and a Jacks-or-Better paytable. Higher / Lower uses 13 independent ranks and at most 97% return; Card War pays 1.94× for a higher card and refunds ties (97.23% return). Rock Paper Scissors has 96.67% return. Memory Match pays 2× for completing eight pairs within sixteen turns. Tic-Tac-Toe pays 2× for a win and refunds draws against a random-move opponent. Codebreaker pays 1.5× for guessing an integer from 1 to 100 within six attempts; optimal search covers at most 63% of codes. Baccarat uses independent rank draws and standard third-card rules, with Player/Banker/Tie bets. Lucky Wheel has twelve equal-probability pockets with 95.83% return. Scratch Cards have three independent symbols, pay matching triples, and have 93.75% return; their results settle at purchase. Dice supports roll-under and roll-over-or-equal targets with a return of at most 97%. Coin Flip pays 1.94× on a 50/50 match. Keno draws 10 unique numbers from 40 against 6 picks, paying 4×/12×/70×/500× for 3/4/5/6 matches. Payouts include the original bet and round down to whole coins. The three-reel slot games have 85.65% theoretical return; five-reel VOID SPINS has 88.73%. European roulette uses 37 equally likely pockets and 97.30% return. Mines uses exact survival probabilities with a 3% margin; Crash uses an independent multiplier survival model with a 3% instant-stop chance. Plinko samples eight independent 50/50 bounces and normalizes risk tables to at most 96% return. Blackjack uses a fresh six-deck shoe, stands on all 17, pays natural blackjack 3:2, and supports double down and up to four split hands. Split aces receive one card each. Return depends on strategy.
 
 Outcomes use browser `crypto.getRandomValues` with unbiased rejection sampling. Animations do not determine results. These probabilities describe long-run expectations; they do not guarantee a particular player's outcome.
 

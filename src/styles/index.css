@@ -5075,3 +5075,46 @@ html[data-quality="low"] .hero-grid{animation:none}
 .scratch-illustration { gap: 5px; padding: 20px 10px; border: 2px solid #f093cf77; border-radius: 12px; background: #42243e; }
 .scratch-illustration span { width: 35px; height: 55px; display: grid; place-items: center; color: #ffce62; background: #f093cf22; border-radius: 6px; font-size: 25px; }
 @media (max-width: 480px) { .scratch-tiles { gap: 6px; } .scratch-tiles button { min-height: 125px; } .baccarat-cards span { width: 38px; height: 60px; font-size: 10px; } }
+.challenge-illustration { position: relative; z-index: 1; display: grid; place-items: center; width: 112px; height: 112px; border-radius: 24px; color: var(--game-color, #b66aff); border: 2px solid color-mix(in srgb, var(--game-color, #b66aff) 50%, transparent); background: linear-gradient(135deg, color-mix(in srgb, var(--game-color, #b66aff) 20%, transparent), #20152d); box-shadow: 0 12px 35px #0005, inset 0 0 25px #ffffff05; transform: rotate(-10deg); }
+.challenge-illustration > span { position: absolute; right: -12px; top: 0; font-size: 25px; }
+.challenge-card { width: 94px; height: 132px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; background: linear-gradient(135deg, #fff, #d9d1e6); color: #272130; border-radius: 10px; box-shadow: 0 5px 20px #0004; }
+.challenge-card b { font-size: 28px; }
+.challenge-card > span { font-size: 36px; }
+.challenge-card.red-card { color: #bd4269; }
+.poker-hand { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; margin: 30px 0 20px; }
+.poker-hand > button { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 6px 0 10px; min-width: 0; border: 2px solid transparent; border-radius: 12px; background: transparent; }
+.poker-hand .challenge-card { width: 100%; height: 130px; }
+.poker-hand > button.held { border-color: #ffce62; background: #ffce6214; }
+.poker-hand small { font-size: 10px; color: #ffce62; letter-spacing: .1em; }
+.poker-hand > button:disabled { opacity: 1; }
+.challenge-main-action { display: block; margin: 15px auto; min-height: 44px; }
+.poker-paytable { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 16px; margin-bottom: 20px; }
+.poker-paytable span { display: flex; justify-content: space-between; gap: 6px; color: var(--muted); font-size: 12px; padding: 6px 0; border-bottom: 1px solid #ffffff0a; }
+.poker-paytable b { color: #ffce62; }
+.hilo-cards { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 28px; margin: 25px 0; padding: 20px 10px; background: radial-gradient(ellipse, #58dfbc10, transparent); }
+.hilo-cards > div { display: flex; flex-direction: column; gap: 14px; align-items: center; }
+.hilo-cards small { color: var(--muted); font-size: 11px; }
+.quick-options button small { display: block; margin-left: 6px; font-size: 10px; color: var(--muted); }
+.rps-stage { display: flex; justify-content: center; align-items: center; gap: 22px; margin: 30px 0; min-height: 210px; }
+.rps-stage > div { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.rps-stage span { font-size: clamp(45px, 9vw, 80px); }
+.rps-stage small { color: var(--muted); font-size: 10px; }
+.rps-stage b { color: #ffb45c; }
+.challenge-heading { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin: 20px 0; font-size: 11px; color: #5cd5f5; }
+.memory-board { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 9px; margin: 20px 0; }
+.memory-board button { aspect-ratio: 1.25; min-height: 48px; border: 1px solid #5cd5f530; border-radius: 12px; background: #5cd5f50a; font-size: 28px; color: #c4edff; }
+.memory-board button.matched { background: #5cd5f529; border-color: #5cd5f5; opacity: 1; }
+.ttt-board { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; max-width: 330px; margin: 25px auto; }
+.ttt-board button { aspect-ratio: 1; min-height: 60px; border: 1px solid #b66aff30; border-radius: 12px; background: #b66aff0a; color: #ffb45c; font-size: 44px; }
+.ttt-board button.player-mark { color: #bfa0ff; }
+.ttt-board button:disabled { opacity: 1; }
+.code-stage { display: flex; flex-direction: column; align-items: center; gap: 18px; margin: 28px 0; padding: 30px; border: 1px solid #7be4d020; border-radius: 16px; background: #7be4d005; }
+.code-stage strong { color: #7be4d0; font-size: 64px; font-family: monospace; letter-spacing: .18em; }
+.code-stage span { color: var(--muted); font-size: 11px; }
+.code-input { display: flex; align-items: center; flex-wrap: wrap; justify-content: center; gap: 12px; }
+.code-input label { font-size: 12px; color: var(--muted); }
+.code-input input { width: 80px; min-height: 44px; border: 1px solid #7be4d040; background: #191220; color: #fff; border-radius: 9px; text-align: center; }
+.code-history { display: flex; flex-wrap: wrap; gap: 7px; margin: 18px 0; }
+.code-history span { display: flex; gap: 8px; padding: 8px 10px; border: 1px solid #7be4d020; border-radius: 8px; color: var(--muted); font-size: 11px; }
+.code-history b { color: #7be4d0; }
+@media (max-width: 480px) { .poker-hand { gap: 3px; } .poker-hand .challenge-card { height: 90px; border-radius: 7px; } .poker-hand .challenge-card b { font-size: 20px; } .poker-hand .challenge-card > span { font-size: 24px; } .poker-paytable { grid-template-columns: 1fr; gap: 2px; } .challenge-illustration { width: 95px; height: 95px; } .hilo-cards { gap: 15px; } }
