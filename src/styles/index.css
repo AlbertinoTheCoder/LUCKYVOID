@@ -1864,7 +1864,7 @@ main {
     0 0 35px #9f723221,
     inset 0 0 30px #000;
   transition-property: transform;
-  transition-timing-function: cubic-bezier(0.08, 0.65, 0.12, 1);
+  transition-timing-function: cubic-bezier(0.2, 0.3, 0.3, 1);
 }
 .roulette-wheel > span {
   position: absolute;
@@ -1898,22 +1898,21 @@ main {
 }
 .roulette-ball-track {
   position: absolute;
-  width: 260px;
-  height: 260px;
+  width: 316px;
+  height: 316px;
   pointer-events: none;
-  transition-property: transform;
-  transition-timing-function: cubic-bezier(0.12, 0.55, 0.15, 1);
 }
 .roulette-ball-track > i {
   position: absolute;
-  top: 0;
+  top: 50%;
   left: 50%;
-  width: 9px;
-  height: 9px;
-  transform: translateX(-50%);
+  width: 11px;
+  height: 11px;
+  transform: translate(-50%, -50%) translateY(-118px);
   border-radius: 50%;
-  background: #fff4de;
-  box-shadow: 0 0 6px #fff6de;
+  background: radial-gradient(circle at 30% 25%, #fff 0%, #fff8e6 30%, #c8bea6 68%, #827866 100%);
+  box-shadow: 2px 3px 3px #0009, inset -1px -1px 2px #63594666;
+  will-change: transform;
 }
 .roulette-table {
   display: flex;
@@ -4767,6 +4766,10 @@ html[data-motion="reduced"] *:after {
   animation: none !important;
   transition-duration: 0.01ms !important;
   scroll-behavior: auto !important;
+}
+/* Keep the game outcome animation visible while reducing decorative motion. */
+html[data-motion="reduced"] .roulette-wheel {
+  transition-duration: 4500ms !important;
 }
 html[data-quality="low"] .hero-art .slot-illustration {
   animation: none;

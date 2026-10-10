@@ -117,7 +117,7 @@ export function Plinko() {
     if (!id) return;
     const path = plinkoPath(),
       slot = path.reduce((s, n) => s + n, 0),
-      duration = player.settings.reducedMotion ? 200 : 2600;
+      duration = 2600;
     motion.current.push({
       id,
       start: performance.now(),

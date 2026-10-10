@@ -6,7 +6,7 @@ import { BetControl, ResultBanner, Rules } from "../components/UI";
 import { SYMBOLS, SLOT_PAY, randomInt, slotPayout } from "./logic";
 import type { GameId } from "../types";
 export function Slots({ id }: { id: GameId }) {
-  const { reserve, settle, sound, player } = usePlayer();
+  const { reserve, settle, sound } = usePlayer();
   const five = id === "void";
   const count = five ? 5 : 3;
   const [bet, setBet] = useState(100),
@@ -45,7 +45,7 @@ export function Slots({ id }: { id: GameId }) {
           );
           setSpinning(false);
         },
-        player.settings.reducedMotion ? 250 : 1400,
+        2000,
       ),
     );
   };

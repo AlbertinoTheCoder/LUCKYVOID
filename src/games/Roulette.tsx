@@ -9,17 +9,22 @@ import {
   randomInt,
   type RouletteBet,
 } from "./logic";
+const SPIN_DURATION_MS = 4500;
 export function Roulette() {
   const { reserve, settle, player, sound } = usePlayer();
   const [bet, setBet] = useState(100),
     [choice, setChoice] = useState<RouletteBet>("red"),
     [busy, setBusy] = useState(false),
     [rotation, setRotation] = useState(0),
-    [ball, setBall] = useState(0),
     [last, setLast] = useState<number | null>(null),
     [pay, setPay] = useState(0);
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
-  useEffect(() => () => clearTimeout(timer.current), []);
+  const ballRef = useRef<HTMLElement>(null);
+  const frame = useRef<number>(0);
+  useEffect(() => () => {
+    clearTimeout(timer.current);
+    cancelAnimationFrame(frame.current);
+  }, []);
   const spin = () => {
     if (busy) return;
     const id = reserve("roulette", bet);
@@ -28,13 +33,30 @@ export function Roulette() {
       idx = rouletteNumbers.indexOf(n),
       target =
         rotation +
-        360 * 5 +
+        360 * (player.settings.reducedMotion ? 1 : 3) +
         (360 - (rotation % 360)) -
         ((idx + 0.5) * 360) / 37;
     setBusy(true);
     setPay(0);
     setRotation(target);
-    setBall((b) => b + 1440);
+    const started = performance.now();
+    const turns = player.settings.reducedMotion ? 1 : 4;
+    const animateBall = (now: number) => {
+      const progress = Math.min(1, (now - started) / SPIN_DURATION_MS);
+      // Counter-rotate on the rim, then lose speed and fall into the winning pocket.
+      const travel = 1 - Math.pow(1 - progress, 2.4);
+      const angle = -turns * Math.PI * 2 * travel;
+      const drop = Math.max(0, Math.min(1, (progress - 0.65) / 0.3));
+      const fall = drop * drop * (3 - 2 * drop);
+      const bounce = player.settings.reducedMotion ? 0 :
+        Math.sin(drop * Math.PI * 6) * (1 - drop) * drop * 12;
+      const radius = 140 - 22 * fall + bounce;
+      if (ballRef.current) {
+        ballRef.current.style.transform = `translate(-50%, -50%) translate(${Math.sin(angle) * radius}px, ${-Math.cos(angle) * radius}px)`;
+      }
+      if (progress < 1) frame.current = requestAnimationFrame(animateBall);
+    };
+    frame.current = requestAnimationFrame(animateBall);
     sound("spin");
     timer.current = setTimeout(
       () => {
@@ -49,7 +71,7 @@ export function Roulette() {
         );
         setBusy(false);
       },
-      player.settings.reducedMotion ? 200 : 3000,
+      SPIN_DURATION_MS,
     );
   };
   return (
@@ -60,7 +82,7 @@ export function Roulette() {
           className="roulette-wheel"
           style={{
             transform: `rotate(${rotation}deg)`,
-            transitionDuration: player.settings.reducedMotion ? "0s" : "3s",
+            transitionDuration: `${SPIN_DURATION_MS}ms`,
             background: `conic-gradient(${rouletteNumbers.map((n, i) => `${n === 0 ? "#218d63" : RED.has(n) ? "#af3c5b" : "#23202f"} ${(i * 360) / 37}deg ${((i + 1) * 360) / 37}deg`).join(",")})`,
           }}
         >
@@ -76,14 +98,8 @@ export function Roulette() {
           ))}
           <div className="roulette-hub">✦</div>
         </div>
-        <div
-          className="roulette-ball-track"
-          style={{
-            transform: `rotate(${ball}deg)`,
-            transitionDuration: player.settings.reducedMotion ? "0s" : "2.9s",
-          }}
-        >
-          <i />
+        <div className="roulette-ball-track">
+          <i ref={ballRef} />
         </div>
       </div>
       <ResultBanner
